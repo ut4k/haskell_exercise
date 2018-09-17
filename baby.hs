@@ -285,23 +285,23 @@ sum' xs = foldl (\acc x -> acc + x) 0 xs
 --畳み込みで実装
 --リスト反転
 --元のリストを左から順にアキュムレーターの空リストの先頭にくっつけていくから逆順になる
-reverse' :: [a] -> [a]
-reverse' = foldl (\acc x -> x: acc) []
+reverse'' :: [a] -> [a]
+reverse'' = foldl (\acc x -> x: acc) []
 --積を求める
 -- リストの各要素をアキュムレータに掛け合わせていく(最初は×１)
-product' :: (Num a) => [a] -> a
-product' = foldl (*) 1
+product'' :: (Num a) => [a] -> a
+product'' = foldl (*) 1
 --フィルタリング
 --filter
 --述語（TrueかFalseを返す関数p）がTrueならリストに追加、そうでなければアキュムレータをそのまま使う
 --これで一致するものだけが追加される
-filter' :: (a -> Bool) -> [a] -> [a]
-filter' p = foldr (\x acc -> if p x then x : acc else acc) []
+filter'' :: (a -> Bool) -> [a] -> [a]
+filter'' p = foldr (\x acc -> if p x then x : acc else acc) []
 --最後の要素取得last
 --リストを最初から見ていってアキュムレータを毎回要素に置き換える
 --これで最後には末尾の要素がアキュムレータになって帰るというわけ
-last' :: [a] -> a
-last' = fold1 (\_ x -> x)
+last'' :: [a] -> a
+last'' = foldl1 (\_ x -> x)
 
 
 -----------------------------------------------------
@@ -344,3 +344,21 @@ last' = fold1 (\_ x -> x)
 -- map (negate . sum . tail) [[1..5],[3..6],[1..7]]
 --
 -- result : [-14,-15,-27]
+
+-----------------------------------------------------
+-- モジュール
+--
+-- import ModuleName -- 普通にインポート
+-- import Data.List (nub, sort)  Data.Listモジュールからnubとsort関数をインポート
+-- import Data.List hiding (nub) Data.Listモジュールからnub以外のすべての関数をインポート（無視）
+-- import qualified Data.Map    Data.Mapモジュールを修飾つきインポート
+--                               (ほかの関数とぶつかるときはこれ。Preludeにもfilterがある)
+--                               これで読み込んだらData.Map.fileterのように関数をつかえる
+--                               ただし毎回修飾を書くのが面倒なので
+-- import qualified Data.Map as M としてエイリアスみたいなものをつけて読み込める
+-- これでM.filterで呼び出せる
+--
+-- ghciからインポート :m ModuleName
+-----------------------------------------------------
+
+-- import qualified Data.Map as M
