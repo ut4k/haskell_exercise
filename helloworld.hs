@@ -1,0 +1,3 @@
+-- 160ページでやっとhello world...
+main = putStrLn "hello, world"
+
