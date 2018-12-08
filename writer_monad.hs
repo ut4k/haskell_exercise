@@ -72,3 +72,57 @@ gcd' a b
 
 --値をモナド値に変えるだけでログが取れるようになった！すげえ！
 
+
+-- 最後に計算結果ログを表示する版
+-- ただしこれは「++」を右結合ではなく左結合で使ってしまうので非効率!!
+gcdReverse :: Int -> Int -> Writer [String] Int
+gcdReverse a b
+    | b == 0 = do
+        tell ["Finished with " ++ show a]
+        return a
+    | otherwise = do
+        result <- gcdReverse b (a `mod` b)
+        tell [show a ++ " mod " ++ show b ++ " = " ++ show (a `mod` b)]
+        return result
+
+-- Finished with 1
+-- 2 mod 1 = 0
+-- 3 mod 2 = 1
+-- 8 mod 3 = 2
+
+----------------
+-- 差分リスト
+----------------
+-- リストをとって別のリストを先頭に付け加える関数
+
+--2つの差分リストを結合する
+f `append` g = \xs -> f (g xs)
+
+--327ページ
+-- 差分リストのnewtypeラッパーを作る
+newtype DiffList a = DiffList { getDiffList :: [a] -> [a] }
+
+--普通のリストを差分リストにする
+toDiffList :: [a] -> DiffList a
+toDiffList xs = DiffList (xs++)
+
+fromDiffList :: DiffList a -> [a]
+fromDiffList (DiffList f) = f []
+
+-- うごかない
+-- fromDiffList (toDiffList [1,2,3,4] `mappend` toDiffList [1,2,3])
+
+-- 非効率だったgcdReverseをかきなおす
+
+-- うごかない
+-- gcdReverse' :: Int -> Int -> Writer (DiffList String) Int
+-- gcdReverse' a b
+--    | b == 0 = do
+--        tell (toDiffList ["Finished with " ++ show a])
+--        return a
+--    | otherwise = do
+--        result <- gcdReverse' b (a `mod` b)
+--        tell (toDiffList [show a ++ " mod " ++ show b ++ " = " ++ show (a `mod` b)])
+--        return result
+
+--差分リストを普通のリストにする

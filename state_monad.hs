@@ -1,5 +1,6 @@
 --状態付き計算
 import Control.Monad.State
+import System.Random
 --
 -- スタックを表現する
 --
@@ -81,3 +82,14 @@ stackyStack = do
 -----------------------
 --ランダム処理を楽にする
 -----------------------
+randomSt :: (RandomGen g, Random a) => Stage g a
+randomSt = state random
+
+-- コインを3枚投げる
+-- 状態付き関数に!
+threeCoins :: State StdGen (Bool, Bool, Bool)
+threeCoins = do
+        a <- randomSt
+        b <- randomSt
+        c <- randomSt
+        return (a, b, c)
